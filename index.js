@@ -9,14 +9,6 @@ const client = new Discord.Client
 const Auditlog = require("discord-auditlog");
 const { MessageEmbed } = require("discord.js");
 
-app.get('/', (request, response) => {
-     response.sendStatus(200);
-});
-
-let listener = app.listen(process.env.PORT, () => {
-     console.log('Your app is currently listening on port: ' + listener.address().port);
-});
-
 let commandlist = [];
 
 fs.readdir('./commands/', async (err, files) => {
@@ -38,7 +30,7 @@ client.on('ready', async () => {
   console.log(chalk.red(`Bot started!\n---\n`
   + `> Channels: ${client.channels.cache.size}\n`
   + `> Servers: ${client.guilds.cache.size}\n`
-  + `> Reminder: Start staff list update handler`));
+  + `> Client: \`${client.user.tag}\`\n`));
   let botstatus = fs.readFileSync('./bot-status.json');
   botstatus = JSON.parse(botstatus);
   if(botstatus.activity == 'false') return;
@@ -89,30 +81,6 @@ client.on('message', async (message) => {
        },
        timestamp: new Date()
      }});
-});
-
-Auditlog(client, {
-	"807134064322412555": {
-		auditlog: "admin-logs",	
-		movement: "admin-logs",
-		auditmsg: "admin-logs", 
-		voice: "admin-logs", 
-		trackroles: true,
-	}
-});
-
-process.on('unhandledRejection', error => {
-	console.error('Unhandled promise rejection:', error);
-  let logChannel = client.channels.cache.get('839632546027274240');
-    logChannel.send("", {embed: {
-      color: 0xf70000,
-      description: `${error}`,
-      timestamp: new Date(),
-        footer: {
-          icon_url: client.user.avatarURL,
-          text: "Winter Adventures Guide School"
-        }
-    }});
 });
 
 client.login(process.env.token);
